@@ -1,0 +1,18 @@
+# Entornos virtuales Python
+backend/.venv/
+backend/__pycache__/
+*.pyc
+
+# Dependencias Node
+frontend/node_modules/
+
+# Archivos de Datos generados
+doc/minuta_*.md
+!doc/.gitkeep
+
+# Variables de entorno
+.env
+
+# Archivos de IDE
+.vscode/
+.idea/
