@@ -89,7 +89,7 @@ cd minutas-iaV1
 
 ## ⚠️ Guía de Resolución de Problemas (Troubleshooting)
 
-1. **Memoria Insuficiente (OOM) al procesar un audio:**
+1. **Memoria Insuficiente (OOM) al procesar un documento de Word masivo:**
    - Si la aplicación crashea, significa que el tamaño del *Chunk* enviado al LLM excede la ventana de contexto o la RAM física de la laptop. Debes ajustar el porcentaje de *overlap* (10-15%) o el tamaño del paquete en el script de Chunking del `backend`.
 2. **El Frontend no recibe el JSON esperado:**
    - La validación de *Pydantic* probablemente está rechazando una alucinación del LLM. Revisa los logs de FastAPI (`backend`). Para arreglarlo, ajusta el *System Prompt* en la lógica del Agente para ser más explícito con el formato requerido.

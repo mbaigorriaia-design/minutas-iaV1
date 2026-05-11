@@ -1,11 +1,11 @@
 # Contexto del Proyecto: Minutas-IA V1
 
 ## Objetivo
-Desarrollar un asistente de reuniones de escritorio (Desktop App) enfocado en la privacidad (Local-First) y en la generación de inteligencia de negocio estructurada a partir de documentos y audio.
+Desarrollar un asistente de reuniones de escritorio (Desktop App) enfocado en la privacidad (Local-First) y en la generación de inteligencia de negocio estructurada a partir de documentos de Word y texto estructurado.
 
 ## Lecciones Aprendidas (Transferred from Previous Prototype)
 
-1.  **Gestión de Memoria (Hardware de 8GB RAM):**
+1.  **Gestión de Memoria (Hardware de 32GB RAM):**
     *   Los modelos de 2B-3B parámetros (Qwen 2.5:3B, Llama 3.2:3B) son el "sweet spot" entre razonamiento y consumo para máquinas locales.
     *   Evitar base de datos de grafos pesadas (como Neo4j) inicialmente; priorizar SQLite y VectorDB ligero.
 
@@ -19,8 +19,8 @@ Desarrollar un asistente de reuniones de escritorio (Desktop App) enfocado en la
 4.  **Arquitectura de Red (Docker):**
     *   La comunicación entre contenedores (n8n, FastAPI, Ollama) requiere una configuración de red explícita y variables de entorno robustas para evitar errores de conexión (SSRF).
 
-5.  **Captura de Audio:**
-    *   El paso de web app a aplicación nativa (Desktop) es necesario para capturar audio del sistema/drivers sin complicaciones técnicas para el usuario final.
+5.  **Captura de Textos Largos:**
+    *   El paso de web app a aplicación nativa (Desktop) es necesario para capturar textos masivos del sistema sin complicaciones técnicas para el usuario final.
 
 ## Estructura Inicial
 - `backend/`: API central en FastAPI.

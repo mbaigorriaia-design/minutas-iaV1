@@ -7,7 +7,7 @@ Este documento explica la arquitectura y el funcionamiento interno del proyecto 
 El proyecto está diseñado como una aplicación de escritorio **Local-First**, lo que significa que el procesamiento de datos ocurre en tu propia máquina para garantizar la privacidad total.
 
 ### Componentes Principales:
-1.  **Frontend (Próximamente):** Una interfaz moderna desarrollada en Next.js (que se empaquetará con Tauri) para permitir la interacción del usuario y la captura de audio de sistema.
+1.  **Frontend (Próximamente):** Una interfaz moderna desarrollada en Next.js (que se empaquetará con Tauri) para permitir la interacción del usuario y la captura de documentos de Word.
 2.  **Backend (FastAPI):** El cerebro del sistema. Escrito en Python, gestiona las solicitudes de procesamiento y la lógica de negocio.
 3.  **Motor de IA (Ollama):** Un servidor local que corre modelos de lenguaje (LLMs) como Llama 3.2 o SmolLM2. Funciona dentro de un contenedor Docker para aislar sus dependencias.
 
@@ -21,7 +21,7 @@ Cuando se procesa una minuta, el sistema sigue estos pasos:
 4.  **Validación:** El Backend valida que el JSON recibido cumpla con el esquema definido en `schemas.py` (usando Pydantic).
 5.  **Entrega:** Se devuelve una respuesta estructurada lista para ser mostrada en la interfaz o guardada en la base de datos.
 
-## Configuración para Hardware de 8GB RAM
+## Configuración para Hardware de 32GB RAM
 
 Para asegurar que el sistema funcione en equipos con recursos limitados, hemos implementado las siguientes estrategias:
 
@@ -34,4 +34,4 @@ Para asegurar que el sistema funcione en equipos con recursos limitados, hemos i
 - **Puerto:** `8000`
 - **Modelos Recomendados:**
   - `llama3.2:latest` (Alta calidad - más lento)
-  - `smollm2:1.7b` (Alta velocidad - recomendado para 8GB)
+  - `smollm2:1.7b` (Alta velocidad - recomendado para 32GB)
