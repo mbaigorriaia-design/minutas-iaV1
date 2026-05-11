@@ -17,21 +17,25 @@ graph TD
     classDef frontend fill:#0070f3,stroke:#fff,stroke-width:2px,color:#fff;
     classDef backend fill:#059669,stroke:#fff,stroke-width:2px,color:#fff;
     classDef llm fill:#000000,stroke:#fff,stroke-width:2px,color:#fff;
+    classDef server fill:#f5f5f5,stroke:#9e9e9e,stroke-width:2px,stroke-dasharray: 5 5;
 
-    User([👤 Usuario Desktop])
+    User([👤 Usuario Web])
     
-    subgraph "Frontend (React / Next.js)"
-        UI[💻 Interfaz Local]:::frontend
-    end
-    
-    subgraph "Backend (FastAPI)"
-        API[⚡ Endpoints REST]:::backend
-        Validator[🛡️ Pydantic Validator]:::backend
-        Chunker[📚 Smart Chunking]:::backend
-    end
-    
-    subgraph "IA Local Optimizada"
-        Ollama[(🧠 Llama3.2 / Qwen2.5)]:::llm
+    subgraph "Servidor (Red Docker Compose)"
+        direction TB
+        subgraph "Contenedor: Frontend"
+            UI[💻 React / Next.js]:::frontend
+        end
+        
+        subgraph "Contenedor: Backend"
+            API[⚡ FastAPI REST]:::backend
+            Validator[🛡️ Pydantic]:::backend
+            Chunker[📚 Smart Chunking]:::backend
+        end
+        
+        subgraph "Contenedor: Ollama"
+            Ollama[(🧠 Llama3.2/Qwen2.5)]:::llm
+        end
     end
 
     User --> UI
