@@ -95,3 +95,12 @@ cd minutas-iaV1
    - La validación de *Pydantic* probablemente está rechazando una alucinación del LLM. Revisa los logs de FastAPI (`backend`). Para arreglarlo, ajusta el *System Prompt* en la lógica del Agente para ser más explícito con el formato requerido.
 3. **El modelo genera basura léxica:**
    - Asegúrate de que el modelo configurado en Ollama sea el correcto (idealmente Qwen 2.5 de 14B o Llama 3). Los modelos pequeños suelen "romperse" semánticamente; **usa siempre versiones de 8B o 14B** para aprovechar los 32GB de RAM.
+
+## 🚀 Roadmap & Trabajo Futuro (Performance API)
+
+Oportunidades de mejora arquitectónica para escalar la velocidad y la experiencia de usuario (UX):
+
+1. **Streaming de Respuesta (Server-Sent Events):** Implementar SSE en FastAPI para que el Frontend de React muestre cómo se va "escribiendo" la minuta en tiempo real (estilo máquina de escribir). Esto elimina por completo la ansiedad del usuario durante tiempos de espera largos.
+2. **Decodificación Restringida (Instructor Library):** Forzar matemáticamente a Ollama a escupir tokens que coincidan *únicamente* con el esquema JSON (usando `Instructor` o `format: "json"`). Esto reduce los errores de validación de Pydantic a 0% y evita reintentos costosos.
+3. **Vectorización Diferida (RAG Local):** Integrar FAISS o ChromaDB en FastAPI para no saturar la RAM leyendo documentos de Word completos de 50 páginas. El sistema buscará matemáticamente solo los párrafos relevantes antes de enviarlos al LLM.
+4. **Feedback de Chunking en Tiempo Real:** Que FastAPI emita eventos asíncronos cada vez que termina de analizar una página (ej: `"Analizando 30% completado..."`) para otorgar transparencia total en la UI sobre la performance del motor.
