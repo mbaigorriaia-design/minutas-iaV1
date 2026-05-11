@@ -1,50 +1,52 @@
+# 🚀 Minutas-IA V1 (Desktop Edition)
+
 <div align="center">
-  <h1>🚀 Minutas-IA V1 (Desktop Edition)</h1>
-  <p><strong>El asistente definitivo de reuniones local-first. Captura, transcribe y estructura inteligencia de negocios sin depender de la nube.</strong></p>
+  <p><strong>Guía de Arquitectura y Mantenimiento para Desarrolladores</strong></p>
 </div>
 
 ---
 
-## 🎯 ¿Qué es Minutas-IA V1?
-Minutas-IA V1 es la evolución hacia una arquitectura nativa de escritorio enfocada 100% en la privacidad (Local-First). Diseñada para operar de manera autónoma incluso en hardware restringido (8GB RAM), transforma transcripciones de audio y documentos en JSON estrictamente estructurado mediante modelos LLM optimizados ejecutándose en tu propia máquina.
+Bienvenido al repositorio de **Minutas-IA V1**. Este documento es la guía técnica de traspaso para que cualquier desarrollador pueda tomar el proyecto, entender sus decisiones de diseño y continuar su mantenimiento fácilmente.
 
-## ✨ Características Principales
-- 🔒 **Zero-Cloud & Privacy First**: Todo el procesamiento (audio, texto, LLM) ocurre localmente. Absoluta confidencialidad.
-- 🪶 **Optimizado para Hardware Restringido**: Diseñado para correr de manera eficiente con modelos de la familia 2B-3B (como `Llama 3.2:3B` o `Qwen 2.5:3B`) balanceando perfectamente razonamiento semántico y consumo de memoria.
-- 🛡️ **Contrato de Datos Estricto**: Adiós a las alucinaciones de formato. Integración nativa de `Pydantic` en el backend para forzar a la IA a retornar la minuta en un esquema JSON validado antes de llegar al usuario.
-- 📚 **Smart Chunking**: Procesamiento de documentos súper extensos mediante algoritmos de fragmentación con overlap (10-15%) para mantener el contexto general sin exceder el límite de tokens del LLM.
+Esta versión **abandona los orquestadores web (como n8n) en favor de una arquitectura App moderna** (FastAPI + React), pensada para ser compilada como una aplicación de escritorio nativa que funcione 100% de manera local y autónoma.
 
-## 🛠️ Arquitectura y Stack Tecnológico
-La versión V1 abandona los orquestadores web de prototipo en favor de una arquitectura App moderna:
+## 🏗️ La Arquitectura V1 (¿Por qué cambió?)
 
-- **Backend (Motor Core)**: `FastAPI` (Python) - Servidor ultrarrápido que gestiona las reglas de negocio, chunking y validación de esquemas (Pydantic).
-- **Frontend (Interfaz de Usuario)**: `Next.js` / React - UI reactiva, limpia y construida pensando en empaquetado Desktop (Tauri).
-- **Capa de Inferencia IA**: `Ollama` - Ejecución eficiente de modelos cuantizados de forma nativa.
-- **Base de Datos Ligera**: `SQLite` (Persistencia de minutas) + *VectorDB* ligera (Búsqueda semántica futura).
+La versión anterior (Legacy) funcionaba bien en servidores grandes, pero en V1 el objetivo es operar en **hardware restringido (8GB RAM)**. Por ende, la arquitectura migró a:
 
-## 📂 Estructura del Proyecto
-```text
-📦 minutas-iaV1
- ┣ 📂 backend/      # API FastAPI, Pydantic schemas, Chunking logic
- ┣ 📂 frontend/     # Next.js SPA
- ┣ 📂 shared/       # Interfaces y contratos de datos comunes
- ┣ 📂 docs/         # Documentación de arquitectura
- ┗ 📜 context.md    # Lecciones aprendidas y roadmap
-```
+1. **Backend Ligero (`FastAPI` / Python)**
+   - Gestiona toda la lógica pesada, enrutamiento y Chunking de documentos.
+   - En lugar de confiar ciegamente en el LLM para generar JSON, utiliza **Pydantic** para estructurar un *contrato de datos estricto*. Si el LLM alucina un formato, el backend lo intercepta y reintenta.
+2. **Frontend Reactivo (`Next.js` / React)**
+   - UI limpia y rápida, diseñada con vistas a ser empaquetada mediante frameworks de escritorio (ej. Tauri/Electron).
+3. **Motor de IA (`Ollama`)**
+   - Utilizamos modelos de rango 2B-3B (ej. `Llama 3.2:3B` o `Qwen 2.5:3B`). Son el balance perfecto entre razonamiento inteligente y consumo de RAM para que la PC del usuario final no colapse.
 
-## 🚀 Despliegue Rápido (Entorno de Desarrollo)
+## 📂 Dónde Encontrar las Cosas (Estructura)
 
-Puedes iniciar todo el ecosistema de IA local con el script principal:
+- `backend/`: Aquí vive FastAPI. Cualquier cambio en la extracción semántica, el algoritmo de Chunking o el esquema JSON va aquí.
+  - `backend/agent/`: Lógica de comunicación con el LLM.
+- `frontend/`: Aplicación Single Page Application en Next.js.
+- `shared/`: Modelos de datos (tipos) compartidos entre Front y Back para mantener coherencia de contratos.
+- `INICIAR_MINUTAS.bat`: Script maestro para levantar todo el entorno de un solo clic.
+
+## 🚀 Cómo Levantar el Entorno Local
 
 ```bash
-# Clonar el proyecto
+# 1. Clona el proyecto
 git clone https://github.com/mbaigorriaia-design/minutas-iaV1.git
 cd minutas-iaV1
 
-# Levantar Backend y Frontend 
+# 2. Ejecuta el script de inicio
 ./INICIAR_MINUTAS.bat
 ```
-*(Asegúrate de tener Ollama corriendo en tu sistema con el modelo base descargado: `ollama run qwen2.5:3b`)*
+*(Nota: Asegúrate de tener instalado Ollama en tu máquina y el modelo base descargado usando `ollama run qwen2.5:3b`)*
 
----
-*Construyendo el futuro de la automatización empresarial local, un commit a la vez.*
+## ⚠️ Guía de Resolución de Problemas (Troubleshooting)
+
+1. **Memoria Insuficiente (OOM) al procesar un audio:**
+   - Si la aplicación crashea, significa que el tamaño del *Chunk* enviado al LLM excede la ventana de contexto o la RAM física de la laptop. Debes ajustar el porcentaje de *overlap* (10-15%) o el tamaño del paquete en el script de Chunking del `backend`.
+2. **El Frontend no recibe el JSON esperado:**
+   - La validación de *Pydantic* probablemente está rechazando una alucinación del LLM. Revisa los logs de FastAPI (`backend`). Para arreglarlo, ajusta el *System Prompt* en la lógica del Agente para ser más explícito con el formato requerido.
+3. **El modelo genera basura léxica:**
+   - Asegúrate de que el modelo configurado en Ollama sea el correcto (idealmente Qwen 2.5 para español o Llama 3.2). Los modelos de 1B de parámetros suelen "romperse" semánticamente en español; **usa siempre versiones de 3B**.
