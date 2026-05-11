@@ -61,6 +61,13 @@ La versión anterior (Legacy) funcionaba bien en servidores grandes, pero en V1 
 - `shared/`: Modelos de datos (tipos) compartidos entre Front y Back para mantener coherencia de contratos.
 - `INICIAR_MINUTAS.bat`: Script maestro para levantar todo el entorno de un solo clic.
 
+## ⚙️ Requisitos Previos (Prerequisites)
+
+Para que el script `INICIAR_MINUTAS.bat` funcione en tu máquina, necesitas:
+- **[Python 3.11+](https://www.python.org/downloads/)** (Asegúrate de marcar "Add python.exe to PATH" durante la instalación).
+- **[Node.js 20+](https://nodejs.org/en)** (Para compilar el frontend en React).
+- **[Ollama](https://ollama.com/)** (Debe estar instalado. Abre una terminal y ejecuta `ollama run qwen2.5:3b` para descargar el modelo de Inteligencia Artificial que usa la app).
+
 ## 🚀 Cómo Levantar el Entorno Local
 
 ```bash
