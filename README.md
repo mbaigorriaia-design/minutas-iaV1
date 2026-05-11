@@ -47,7 +47,7 @@ graph TD
     Validator -- "✅ JSON Válido" --> UI
     UI -- "Renderiza y Descarga Minuta" --> User
 ```
-La versión anterior (Legacy) funcionaba bien en servidores grandes, pero en V1 el objetivo es operar en **hardware restringido (8GB RAM)**. Por ende, la arquitectura migró a:
+La versión anterior (Legacy) dependía de orquestadores pesados. En V1 la arquitectura migró hacia FastAPI y React, permitiendo aprovechar todo el poder de servidores de **alto rendimiento (32GB RAM)**:
 
 1. **Backend Ligero (`FastAPI` / Python)**
    - Gestiona toda la lógica pesada, enrutamiento y Chunking de documentos.
@@ -55,7 +55,7 @@ La versión anterior (Legacy) funcionaba bien en servidores grandes, pero en V1 
 2. **Frontend Reactivo (`Next.js` / React)**
    - UI limpia y rápida, diseñada con vistas a ser empaquetada mediante frameworks de escritorio (ej. Tauri/Electron).
 3. **Motor de IA (`Ollama`)**
-   - Utilizamos modelos de rango 2B-3B (ej. `Llama 3.2:3B` o `Qwen 2.5:3B`). Son el balance perfecto entre razonamiento inteligente y consumo de RAM para que la PC del usuario final no colapse.
+   - Al contar con 32GB de RAM, se pueden cargar modelos avanzados (ej. `Llama3:8b` o `Qwen2.5:14b`). Estos proveen un razonamiento impecable, previenen alucinaciones y devuelven JSON perfecto.
 
 ## 📂 Dónde Encontrar las Cosas (Estructura)
 
@@ -69,7 +69,7 @@ La versión anterior (Legacy) funcionaba bien en servidores grandes, pero en V1 
 
 **Para Despliegue en Producción (Servidor):**
 - **Docker Engine y Docker Compose** (Administrado vía Portainer).
-- **Ollama** corriendo en el host del servidor con el modelo descargado (`ollama run qwen2.5:3b`).
+- **Ollama** corriendo en el host del servidor con el modelo descargado (`ollama run qwen2.5:14b`).
 *(En el servidor no necesitas instalar Python ni Node.js, ya que todo se encuentra encapsulado en los contenedores).*
 
 **Para Desarrollo Local:**
@@ -85,7 +85,7 @@ cd minutas-iaV1
 # 2. Ejecuta el script de inicio
 ./INICIAR_MINUTAS.bat
 ```
-*(Nota: Asegúrate de tener instalado Ollama en tu máquina y el modelo base descargado usando `ollama run qwen2.5:3b`)*
+*(Nota: Asegúrate de tener instalado Ollama en tu máquina y el modelo avanzado descargado usando `ollama run qwen2.5:14b`)*
 
 ## ⚠️ Guía de Resolución de Problemas (Troubleshooting)
 
@@ -94,4 +94,4 @@ cd minutas-iaV1
 2. **El Frontend no recibe el JSON esperado:**
    - La validación de *Pydantic* probablemente está rechazando una alucinación del LLM. Revisa los logs de FastAPI (`backend`). Para arreglarlo, ajusta el *System Prompt* en la lógica del Agente para ser más explícito con el formato requerido.
 3. **El modelo genera basura léxica:**
-   - Asegúrate de que el modelo configurado en Ollama sea el correcto (idealmente Qwen 2.5 para español o Llama 3.2). Los modelos de 1B de parámetros suelen "romperse" semánticamente en español; **usa siempre versiones de 3B**.
+   - Asegúrate de que el modelo configurado en Ollama sea el correcto (idealmente Qwen 2.5 de 14B o Llama 3). Los modelos pequeños suelen "romperse" semánticamente; **usa siempre versiones de 8B o 14B** para aprovechar los 32GB de RAM.
