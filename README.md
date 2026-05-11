@@ -63,10 +63,13 @@ La versión anterior (Legacy) funcionaba bien en servidores grandes, pero en V1 
 
 ## ⚙️ Requisitos Previos (Prerequisites)
 
-Para que el script `INICIAR_MINUTAS.bat` funcione en tu máquina, necesitas:
-- **[Python 3.11+](https://www.python.org/downloads/)** (Asegúrate de marcar "Add python.exe to PATH" durante la instalación).
-- **[Node.js 20+](https://nodejs.org/en)** (Para compilar el frontend en React).
-- **[Ollama](https://ollama.com/)** (Debe estar instalado. Abre una terminal y ejecuta `ollama run qwen2.5:3b` para descargar el modelo de Inteligencia Artificial que usa la app).
+**Para Despliegue en Producción (Servidor):**
+- **Docker Engine y Docker Compose** (Administrado vía Portainer).
+- **Ollama** corriendo en el host del servidor con el modelo descargado (`ollama run qwen2.5:3b`).
+*(En el servidor no necesitas instalar Python ni Node.js, ya que todo se encuentra encapsulado en los contenedores).*
+
+**Para Desarrollo Local:**
+- Python 3.11+ y Node.js 20+ (Solo si vas a usar el script `./INICIAR_MINUTAS.bat`).
 
 ## 🚀 Cómo Levantar el Entorno Local
 
