@@ -12,6 +12,37 @@ Esta versión **abandona los orquestadores web (como n8n) en favor de una arquit
 
 ## 🏗️ La Arquitectura V1 (¿Por qué cambió?)
 
+```mermaid
+graph TD
+    classDef frontend fill:#0070f3,stroke:#fff,stroke-width:2px,color:#fff;
+    classDef backend fill:#059669,stroke:#fff,stroke-width:2px,color:#fff;
+    classDef llm fill:#000000,stroke:#fff,stroke-width:2px,color:#fff;
+
+    User([👤 Usuario Desktop])
+    
+    subgraph "Frontend (React / Next.js)"
+        UI[💻 Interfaz Local]:::frontend
+    end
+    
+    subgraph "Backend (FastAPI)"
+        API[⚡ Endpoints REST]:::backend
+        Validator[🛡️ Pydantic Validator]:::backend
+        Chunker[📚 Smart Chunking]:::backend
+    end
+    
+    subgraph "IA Local Optimizada"
+        Ollama[(🧠 Llama3.2 / Qwen2.5)]:::llm
+    end
+
+    User --> UI
+    UI --> API
+    API --> Chunker
+    Chunker --> Ollama
+    Ollama --> Validator
+    Validator -- "❌ Falla" --> Ollama
+    Validator -- "✅ JSON Válido" --> UI
+    UI --> User
+```
 La versión anterior (Legacy) funcionaba bien en servidores grandes, pero en V1 el objetivo es operar en **hardware restringido (8GB RAM)**. Por ende, la arquitectura migró a:
 
 1. **Backend Ligero (`FastAPI` / Python)**
