@@ -45,7 +45,7 @@ graph TD
     Ollama --> Validator
     Validator -- "❌ Falla" --> Ollama
     Validator -- "✅ JSON Válido" --> UI
-    UI --> User
+    UI -- "Renderiza y Descarga Minuta" --> User
 ```
 La versión anterior (Legacy) funcionaba bien en servidores grandes, pero en V1 el objetivo es operar en **hardware restringido (8GB RAM)**. Por ende, la arquitectura migró a:
 
